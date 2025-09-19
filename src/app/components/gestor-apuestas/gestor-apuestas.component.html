@@ -1,0 +1,86 @@
+<div class="container">
+  <h1>🎰 Registro de Ganancias de Apuestas</h1>
+
+  <!-- Estadísticas -->
+  <div class="stats">
+    <div class="stat-card" [style.color]="balanceTotal >= 0 ? '#4CAF50' : '#f44336'">
+      <h3>Balance Total</h3>
+      <div class="stat-value">${{ balanceTotal.toFixed(2) }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Ganancias Totales</h3>
+      <div class="stat-value">${{ gananciasTotales.toFixed(2) }}</div>
+    </div>
+    <div class="stat-card negative">
+      <h3>Pérdidas Totales</h3>
+      <div class="stat-value">${{ perdidasTotales.toFixed(2) }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Total Apuestas</h3>
+      <div class="stat-value">{{ totalApuestas }}</div>
+    </div>
+  </div>
+
+  <!-- Controles -->
+  <div class="controls">
+    <div class="form-group">
+      <label>Descripción:</label>
+      <input [(ngModel)]="descripcion" type="text" placeholder="Ej: gana giants mapa 1">
+    </div>
+    <div class="form-group">
+      <label>Monto Apostado:</label>
+      <input [(ngModel)]="monto" type="number" step="0.01" placeholder="0.00">
+    </div>
+    <div class="form-group">
+      <label>Ganancia Potencial:</label>
+      <input [(ngModel)]="ganancia" type="number" step="0.01" placeholder="0.00">
+    </div>
+    <div class="form-group">
+      <label>¿Salió?</label>
+      <select [(ngModel)]="resultado">
+        <option value="">Seleccionar</option>
+        <option value="si">Sí</option>
+        <option value="no">No</option>
+      </select>
+    </div>
+
+    <button (click)="agregarApuesta()">➕ Agregar Apuesta</button>
+    <button class="btn-danger" (click)="limpiarTodo()">🗑️ Limpiar Todo</button>
+    <button class="export-btn" (click)="exportarCSV()">📊 Exportar CSV</button>
+  </div>
+
+  <!-- Tabla -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Descripción</th>
+          <th>Monto</th>
+          <th>Ganancia</th>
+          <th>¿Salió?</th>
+          <th>Saldo</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let apuesta of apuestas">
+          <td>{{ apuesta.descripcion }}</td>
+          <td>${{ apuesta.monto.toFixed(2) }}</td>
+          <td>${{ apuesta.ganancia.toFixed(2) }}</td>
+          <td><input type="checkbox" [checked]="apuesta.resultado==='si'" disabled></td>
+          <td [ngClass]="{'ganancia positiva': apuesta.saldo>=0, 'ganancia negativa': apuesta.saldo<0}">
+            ${{ apuesta.saldo.toFixed(2) }}
+          </td>
+          <td>{{ apuesta.fecha }}</td>
+          <td><button class="delete-btn" (click)="eliminarApuesta(apuesta.id)">🗑️</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="balance-total">
+    Balance Total: $<span [style.color]="balanceTotal>=0 ? '#4CAF50' : '#f44336'">{{ balanceTotal.toFixed(2) }}</span>
+  </div>
+</div>
+
